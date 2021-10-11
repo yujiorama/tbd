@@ -1,81 +1,106 @@
 ---
 date: 2016-03-02T20:08:11+01:00
-title: Version control system choices
+title: バージョン管理システムの選択
 weight: 32
 ---
 
-## Git and Mercurial
+## Git と Mercurial
 
-See Git's website{{< ext url="https://git-scm.com" >}} and Mercurial's website{{< ext url="https://www.mercurial-scm.org" >}}
+<!-- See Git's website{{< ext url="https://git-scm.com" >}} and Mercurial's website{{< ext url="https://www.mercurial-scm.org" >}} -->
+Git {{< ext url="https://git-scm.com" >}} と Mercurial {{< ext url="https://www.mercurial-scm.org" >}} のそれぞれについては、Web サイトを参照してください。
 
-Git and Mercurial have been popular DVCS technologies for many years. Portals like GitHub make Git, in particular, the default 
+<!-- Git and Mercurial have been popular DVCS technologies for many years. Portals like GitHub make Git, in particular, the default
 choice for SCM/SVC/source-control. While the Linux Kernel is maintained with Git, and definitely takes advantage 
 of the D-Distributed aspect of the DVCS of Git (in that many divergent versions of kernel can exist over 
 long periods of time), most enterprises are still going to count a single repository as the principal one, and within 
-that a single branch as the long-term "most valuable" code line.
+that a single branch as the long-term "most valuable" code line. -->
+どちらも分散バージョン管理システムとして有名です。
+GitHub のように Git のために作られたポータルサイトもあるくらいで、ソースコード管理システムとして最初の選択肢になりました。
+Linux カーネルが Git で管理されているのは、分散バージョン管理システムの分散性を活用するためですが（だからこそ長期間にわたって多数のバージョンが共存できている）、ほとんどの業務システムには唯一のリポジトリが1つあればよいのですし、その中で1つのブランチが長期的に「最も価値のある」コードを保持するのです。
 
-It is perfectly possible to do Trunk-Based Development in a Git repository. By convention 'master' is the long term 
-most valuable branch, and once cloned to your local workstation, the repository gains a nickname of 'origin'.
+<!-- It is perfectly possible to do Trunk-Based Development in a Git repository. By convention 'master' is the long term
+most valuable branch, and once cloned to your local workstation, the repository gains a nickname of 'origin'. -->
+間違いなく Git リポジトリでトランクベース開発は可能です。
+慣習的に最も価値のある長命ブランチ名は `master` にして、作業マシンにクローンしたリポジトリの別名は `origin` にします。
 
-### Forks
+### フォーク
 
-An effective Trunk-Based Development strategy, for Git, depends on the developer maintaining a fork of the origin 
+<!-- An effective Trunk-Based Development strategy, for Git, depends on the developer maintaining a fork of the origin
 (and of master within), and Pull-Requests being the place that ready to merge commits are code reviewed, **before** being 
 consumed back into `origin:master`. Other branching models use the same Pull-Request process for 
-code-reviews too - it is the normal way of working with Git since GitHub rolled out the feature.
+code-reviews too - it is the normal way of working with Git since GitHub rolled out the feature. -->
+Git を使用したトランクベース開発の効率は、`origin` のフォークを管理する手間と、`origin:master` に **マージする前** のコミットをレビューするプルリクエストにかかっています。
+ほとんどのブランチモデルがプルリクエストによるコードレビューをプロセスの一部として取り込んでいます。
+GitHub が同機能を公開してから、それが当たり前になったのです。
 
-### Size Limits
+### 大きさの制限
 
-Historically, Git and Mercurial were not great at maintaining a zipped history size greater that 1GB. Many 
+<!-- Historically, Git and Mercurial were not great at maintaining a zipped history size greater that 1GB. Many
 teams have reported that they have a repository size larger than that, so opinions differ. One way that you can reach 
 that 1GB ceiling quickly is with larger binaries. As Git keeps history in the zipped repository, even a single larger 
-binary that changes frequently can push the total use above 1GB.
+binary that changes frequently can push the total use above 1GB. -->
+Git や Mercurial は、歴史的に 1GB を越える履歴を上手く扱えないことになっています。
+それでも、1 GB を越えるリポジトリで仕事をしているたくさんのチームが存在するため、絶対正しい主張だとは考えにくい状況です。
+大きなバイナリファイルをリポジトリで管理しようとすると、すぐに 1GB を越えてしまうでしょう。
+Git は履歴をまとめた状態でリポジトリに記録するので、1つの大きなバイナリファイルを頻繁に変更していると、合計使用領域はすぐに 1GB を越えてしまいます。
 
-With the likes of correctly configured Git-LFS extension to Git, though, the 1GB limit can be avoided or delayed 
-many years.
+<!-- With the likes of correctly configured Git-LFS extension to Git, though, the 1GB limit can be avoided or delayed
+many years. -->
+Git の拡張機能 Git-LFS を正しく使用すれば、1GB の制限は無視できる、あるいは数年間先送りにできます。
 
-Other ways to limit larger clone sizes in git repos include recommending/specifying a partial cloning date horizon 
+<!-- Other ways to limit larger clone sizes in git repos include recommending/specifying a partial cloning date horizon
 with the "--shallow-since" parameter, or using git's more recent Partial-Clone{{< ext url="https://git-scm.com/docs/partial-clone" >}} features, supported in GitLab for 
 example, to get the git commit history without getting all the blobs, and instead having the blobs download transparently 
-on-demand/as-needed.
+on-demand/as-needed. -->
+Git リポジトリをクローンするときのデータ転送量を制限する方法として、`--shallow-since` フラグを使用する方法があります。
+また、GitLab で使用できる Partial-Clone{{< ext url="https://git-scm.com/docs/partial-clone" >}} 機能では、クローンするときはコミット履歴だけを取得して、必要になったら blob を取得するようになっています。
 
-Git also has Submodules{{< ext url="https://git-scm.com/docs/git-submodule" >}} and 
+<!-- Git also has Submodules{{< ext url="https://git-scm.com/docs/git-submodule" >}} and
 Subtrees{{< ext url="https://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree" >}} to allow large 
 federations of modules, within one cloneable set.  For their 
- Android initiative, Google made Git-repo{{< ext url="http://source.android.com/source/using-repo.html" >}} too.
+ Android initiative, Google made Git-repo{{< ext url="http://source.android.com/source/using-repo.html" >}} too. -->
+Submodule{{< ext url="https://git-scm.com/docs/git-submodule" >}} や Subtrees{{< ext url="https://blogs.atlassian.com/2013/05/alternatives-to-git-submodule-git-subtree" >}} といった機能では、複数のモジュールを大きなフェデレーションとして1回のクローン操作対象にできます。
+Google が Android 開発のために開発した Git-repo{{< ext url="http://source.android.com/source/using-repo.html" >}} も同じような機能です。
 
 
+### 最上位ブランチ
 
-### Root level branches
+<!-- It'll be clear later why we mention this, but Git and Mercurial maintain branches from the root folder of the
+checkout clone, and maintains a single permission for a user in respect of read and/or write on the branch and/or repository. -->
+このセクションで「最上位ブランチ」について言及する理由が分かるのはもう少し先のことです。
+Git と Mercurial ではクローンしたリポジトリの最上位フォルダから下をブランチとして管理します。
+そして、リポジトリやブランチへの読み取り、書き込み権限を、ユーザーごとの単一の権限として管理します。
 
-It'll be clear later why we mention this, but Git and Mercurial maintain branches from the root folder of the 
-checkout clone, and maintains a single permission for a user in respect of read and/or write on the branch and/or repository.
+### 将来の予定
 
-### Future development
+<!-- There is a suggestion that Mercurial is receiving contributions that will allow it to push into the very repository
+territory the likes of Google needs. -->
+Mercurial では、Google が必要としているようなリポジトリ機能に関する貢献を受け付けることが提案されています。
 
+<!-- Git and Mercurial don't have branch or directory permissions, but some of the platforms that bundle them, add
+branch permissions. -->
+Git や Mercurial にはブランチやディレクトリに対する権限管理機能がないため、プラットフォームよっては独自機能として対応している場合があります。
 
-There is a suggestion that Mercurial is receiving contributions that will allow it to push into the very repository
-territory the likes of Google needs.
+### リナス・トーバルズから Googler に対する Git のプレゼン
 
-Git and Mercurial don't have branch or directory permissions, but some of the platforms that bundle them, add 
-branch permissions.
+<!-- Back in 2007, Linus Torvalds presented his Bitkeeper inspired Git to Googlers in their Mountain View office: -->
+2007 年、リナス・トーバルズはマウンテンビューの Google のオフィスで、Git の着想の元になった Bitkeeper をプレゼンしました。
 
-### Linus Torvalds presenting Git to Googlers
-
-Back in 2007, Linus Torvalds presented his Bitkeeper inspired Git to Googlers in their Mountain View office:
- 
 <div noprint style="position: relative; padding-bottom: 56.25%; padding-top: 30px; height: 0; overflow: hidden;"><iframe src="//www.youtube.com/embed/4XpnKHJAok8" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" allowfullscreen frameborder="0"></iframe></div>
  
 <!-- print <img src="linus-git.png"> print -->
 <!-- print <br/> print -->
 <!-- print <a href="https://youtu.be/4XpnKHJAok8">Video Available at https://youtu.be/4XpnKHJAok8</a> print --> 
  
-He had started making it two years before, and it is now the #1
+<!-- He had started making it two years before, and it is now the #1
 VCS choice. Google had been running their Monorepo style Trunk for a few years at this point, without regret. Some
 Googlers would later extend their Perforce (see below) setup to allow Git operation of local branches on
-developer workstations.
+developer workstations. -->
+開発したのは2年前だったけど、その時点では1番のバージョン管理ツールでした。
+Google は数年間モノリポでトランクベース開発をしたけど、何も後悔する結果にはなりませんでした。
+中には Perfoce を拡張して開発者の作業マシンに置いてあるローカルリポジトリを Git のように操作できるようにした人もいました。
 
-### Platform Software Choices
+### プラットフォームの選択肢
 
 * GitHub {{< ext url="https://github.com" >}} - Git, cloud 
 * GitHub Enterprise {{< ext url="https://enterprise.github.com/home" >}} - Git in GitHub's on-premises edition
