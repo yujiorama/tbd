@@ -164,38 +164,57 @@ root/
 <!-- You can keep rerunning the `gcheckout` to expand or contract your working copy to meet your current goals. -->
 `gcheckout` を実行するたびに、必要に応じて作業コピーを拡大したり縮小したりできるのです。
 
-## Contrived example of use #2
+## 不自然な具体例（その2）
 
-We used 'change the wheel on a car', on the [Branch By Abstraction](/branch-by-abstraction/) page for its contrived 
+<!-- We used 'change the wheel on a car', on the [Branch By Abstraction](/branch-by-abstraction/) page for its contrived
 example. It will serve us again here. The wheel is what we want to change. The other team using 'Wheel(s)' is making a 
-Segway thing (two wheels and self-balancing via high-torque and very responsive motors). Here's the procedure:
+Segway thing (two wheels and self-balancing via high-torque and very responsive motors). Here's the procedure: -->
+[抽象化によるブランチ](/branch-by-abstraction/) を説明するための題材「車のホイール交換」を再び取り上げることにします。
+ホイールとは私たちが変更したいモノを表しています。
+あるチームはセグウェイ的な何か（高トルクで反応性のよいモーターで、自律的にバランスを取りながら2本のホイールを駆動する乗り物）を開発しているものとします。
 
 ![](car_segway.png)  
  
-The starting position is two teams working separately, using 'Wheel' (4 for cars, 2 for Segways). Without any commits 
+<!-- The starting position is two teams working separately, using 'Wheel' (4 for cars, 2 for Segways). Without any commits
 happening the engineer changing 'Wheel' for everyone, runs gcheckout (or its equivalent) to modify the source in the 
 IDE to the union of Car and Segway (and in-house dependencies). That is marked as step 0. Let us say the
 change is quick/easy this time (not requiring Branch By Abstraction) step 1 shows the single commit that changes
 the wheel implementation for everyone.  After the commit/push, running again shows the application focused team checkout - either 
-'Car' or 'Segway'.
- 
-## Git's Sparse checkouts
+'Car' or 'Segway'. -->
+ 初期位置では2つのチームの作業は独立しています（4輪の車を開発しているチームと、2輪のセグウェイを開発しているチーム）。
+ 誰かが全員の使用する「ホイール」を変更しなければ、車とセグウェイ（および自社開発の依存対象）のソースコードの変更を `gcheckout` で取得できます。
+ つまり手順0です。
+ この段階では抽象化によるブランチをしなくても、すぐに、簡単に変更できます。
+ 手順1は、1つのコミットでホイールの実装を変更している様子を表しています。
+ コミットをプッシュしてから `gcheckout` を実行すると、車あるいはセグウェイがどのように変化するのか分かると思います。
 
-Git has a 'sparse checkout' capability, which exactly facilitates this sort of thing. Subversion and Mercurial do too.  
+## Git の疎なチェックアウト（スパースチェックアウト）
+
+<!-- Git has a 'sparse checkout' capability, which exactly facilitates this sort of thing. Subversion and Mercurial do too.
 Perforce has a 'client spec' capability that is more or less the same. A team wanting to have their own gcheckout equivalent
-would have some scripting around sparse checkouts (or equivalent). 
- 
-### Using Git this way today
+would have some scripting around sparse checkouts (or equivalent).  -->
+Git の「疎なチェックアウト（sparse checkout）」は、このセクションで検討している機能そのものです。
+Subversion や Mercurial にも同じような機能があります。
+Perforce の「クライアント仕様」も同じような機能を提供します。
+「疎なチェックアウト」機能を使えば、自分たちで `gcheckout` 相当のスクリプトを開発できます。
 
-If you're willing to go a 'split history' maneuver on your monorepo once or twice a year, Git can do the expandable and 
-contractible monorepo setup today. 
+### 今風の Git の使い方
 
-## Perforce's client-specs
+<!-- If you're willing to go a 'split history' maneuver on your monorepo once or twice a year, Git can do the expandable and
+contractible monorepo setup today.  -->
+モノリポをやっていると、1年に何回かは履歴を分割したい気持ちになるでしょう。
+Git ならモノリポを柔軟に拡大、縮小できます。
 
-Perforce has a 'client spec' (alternatively 'view') that is accessed via the client command or UI. Amongst other things, it 
+## Perforce の「クライアント仕様」について
+
+<!-- Perforce has a 'client spec' (alternatively 'view') that is accessed via the client command or UI. Amongst other things, it
 allows a checkout to be a subset of the directories/files available within the branch. A list of globbed includes and 
 excludes is the format. You would script this (as Google did until 2012) to have a directed graph driven 
-expandable/contractible checkout.
+expandable/contractible checkout. -->
+Perforce の「クライアント仕様」（ビューと呼ばれています）はクライアントのコマンド（あるいはUI）です。
+ブランチの一部のディレクトリやファイルを選択的にチェックアウトできます。
+取得対象と除外対象をファイルグロブ形式で指定します。
+Google が 2012 年までやっていたように、有向グラフに基づく拡大・縮小チェックアウトを実現するスクリプトを作成できるでしょう。
 
 ## PlasticSCM's cloaked.conf
 
